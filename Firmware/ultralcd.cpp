@@ -586,7 +586,7 @@ void lcdui_print_Z_coord(void)
     if (custom_message_type == CustomMsg::MeshBedLeveling)
         lcd_puts_P(_N("Z   --- "));
     else
-		lcd_printf_P(_N("Z%6.2f "), current_position[Z_AXIS]);
+		lcd_printf_P(_N("Z%6.2f%c"), current_position[Z_AXIS], axis_known_position[Z_AXIS]?' ':'?');
 }
 
 #ifdef PLANNER_DIAGNOSTICS
@@ -622,21 +622,24 @@ void lcdui_print_feedrate(void)
 // Print percent done in form "USB---%", " SD---%", "   ---%" (7 chars total)
 void lcdui_print_percent_done(void)
 {
-	char sheet[8];
 	const char* src = is_usb_printing?_N("USB"):(IS_SD_PRINTING?_N(" SD"):_N("   "));
 	char per[4];
 	bool num = IS_SD_PRINTING || (PRINTER_ACTIVE && (print_percent_done_normal != PRINT_PERCENT_DONE_INIT));
 	if (!num || heating_status) // either not printing or heating
 	{
-		eeprom_read_block(sheet, EEPROM_Sheets_base->s[eeprom_read_byte(&(EEPROM_Sheets_base->active_sheet))].name, 7);
-		sheet[7] = '\0';
-		lcd_printf_P(PSTR("%s"),sheet);
+		const int8_t sheetNR = eeprom_read_byte(&(EEPROM_Sheets_base->active_sheet));
+		const int8_t nextSheet = eeprom_next_initialized_sheet(sheetNR);
+		if ((nextSheet >= 0) && (sheetNR != nextSheet))
+		{
+			char sheet[8];
+			eeprom_read_block(sheet, EEPROM_Sheets_base->s[sheetNR].name, 7);
+			sheet[7] = '\0';
+			lcd_printf_P(PSTR("%-7s"),sheet);
+			return; //do not also print the percentage
+		}
 	}
-	else
-	{
-		sprintf_P(per, num?_N("%3hhd"):_N("---"), calc_percent_done());
-		lcd_printf_P(_N("%3S%3s%%"), src, per);
-	}
+	sprintf_P(per, num?_N("%3hhd"):_N("---"), calc_percent_done());
+	lcd_printf_P(_N("%3S%3s%%"), src, per);
 }
 
 // Print extruder status (5 chars total)
@@ -7369,30 +7372,26 @@ static void lcd_sd_updir()
 
 void lcd_print_stop()
 {
-//-//
-     if(!card.sdprinting)
-          {
-          SERIAL_ECHOLNRPGM(MSG_OCTOPRINT_CANCEL);   // for Octoprint
-          }
-	saved_printing = false;
-    saved_printing_type = PRINTING_TYPE_NONE;
+    if (!card.sdprinting) {
+        SERIAL_ECHOLNRPGM(MSG_OCTOPRINT_CANCEL);   // for Octoprint
+    }
+
+    CRITICAL_SECTION_START;
+
+    // Clear any saved printing state
+    cancel_saved_printing();
 	cancel_heatup = true;
-#ifdef MESH_BED_LEVELING
-	mbl.active = false;
-#endif
-	// Stop the stoppers, update the position from the stoppers.
-	if (mesh_bed_leveling_flag == false && homing_flag == false)
-	{
-		planner_abort_hard();
-		// Because the planner_abort_hard() initialized current_position[Z] from the stepper,
-		// Z baystep is no more applied. Reset it.
-		babystep_reset();
-	}
-	// Clean the input command queue.
+
+    // Abort the planner/queue/sd
+    planner_abort_hard();
 	cmdqueue_reset();
-	lcd_setstatuspgm(_T(MSG_PRINT_ABORTED));
 	card.sdprinting = false;
 	card.closefile();
+    st_reset_timer();
+
+    CRITICAL_SECTION_END;
+
+	lcd_setstatuspgm(_T(MSG_PRINT_ABORTED));
 	stoptime = _millis();
 	unsigned long t = (stoptime - starttime - pause_time) / 1000; //time in s
 	pause_time = 0;

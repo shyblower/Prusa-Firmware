@@ -345,10 +345,6 @@ static float next_feedrate;
 // Original feedrate saved during homing moves
 static float saved_feedrate;
 
-// Determines Absolute or Relative Coordinates.
-// Also there is bool axis_relative_modes[] per axis flag.
-static bool relative_mode = false;  
-
 const int sensitive_pins[] = SENSITIVE_PINS; // Sensitive pin list for M42
 
 //static float tt = 0;
@@ -2125,9 +2121,15 @@ void raise_z_above(float target, bool plan)
     // Z needs raising
     current_position[Z_AXIS] = target;
 
-    if (axis_known_position[Z_AXIS])
+#if defined(Z_MIN_PIN) && (Z_MIN_PIN > -1) && !defined(DEBUG_DISABLE_ZMINLIMIT)
+    bool z_min_endstop = (READ(Z_MIN_PIN) != Z_MIN_ENDSTOP_INVERTING);
+#else
+    bool z_min_endstop = false;
+#endif
+
+    if (axis_known_position[Z_AXIS] || z_min_endstop)
     {
-        // current position is known, it's safe to raise Z
+        // current position is known or very low, it's safe to raise Z
         if(plan) plan_buffer_line_curposXYZE(max_feedrate[Z_AXIS], active_extruder);
         return;
     }
@@ -5213,15 +5215,19 @@ if(eSoundMode!=e_SOUND_MODE_SILENT)
             
     //! ### G90 - Switch off relative mode
     // -------------------------------
-    case 90:
-      relative_mode = false;
-      break;
+    case 90: {
+        for(uint8_t i = 0; i != NUM_AXIS; ++i)
+            axis_relative_modes[i] = false;
+    }
+    break;
 
     //! ### G91 - Switch on relative mode
     // -------------------------------
-    case 91:
-      relative_mode = true;
-      break;
+    case 91: {
+        for(uint8_t i = 0; i != NUM_AXIS; ++i)
+            axis_relative_modes[i] = true;
+    }
+    break;
 
     //! ### G92 - Set position
     // -----------------------------
@@ -6249,13 +6255,13 @@ Sigma_Exit:
     //! ### M82 - Set E axis to absolute mode
     // ---------------------------------------
     case 82:
-      axis_relative_modes[3] = false;
+      axis_relative_modes[E_AXIS] = false;
       break;
 
     //! ### M83 - Set E axis to relative mode
     // ---------------------------------------  
     case 83:
-      axis_relative_modes[3] = true;
+      axis_relative_modes[E_AXIS] = true;
       break;
 
     //! ### M84, M18 - Disable steppers
@@ -8283,7 +8289,7 @@ void get_coordinates()
   for(int8_t i=0; i < NUM_AXIS; i++) {
     if(code_seen(axis_codes[i]))
     {
-      bool relative = axis_relative_modes[i] || relative_mode;
+      bool relative = axis_relative_modes[i];
       destination[i] = (float)code_value();
       if (i == E_AXIS) {
         float emult = extruder_multiplier[active_extruder];
@@ -10360,6 +10366,14 @@ void restore_print_from_ram_and_continue(float e_move)
     saved_printing_type = PRINTING_TYPE_NONE;
 	saved_printing = false;
     waiting_inside_plan_buffer_line_print_aborted = true; //unroll the stack
+}
+
+// Cancel the state related to a currently saved print
+void cancel_saved_printing()
+{
+    saved_target[0] = SAVED_TARGET_UNSET;
+    saved_printing_type = PRINTING_TYPE_NONE;
+    saved_printing = false;
 }
 
 void print_world_coordinates()
