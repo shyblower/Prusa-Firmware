@@ -3,6 +3,15 @@
 
 #include <limits.h>
 #include "printers.h"
+
+
+/*------------------------------------
+ MODDING SETTINGS
+ *------------------------------------*/
+#define BONDTECH_EXTRUDER
+#define STEPPER_X_09
+#define STEPPER_Y_09
+
 /*------------------------------------
  GENERAL SETTINGS
  *------------------------------------*/
@@ -19,7 +28,7 @@
 #define DEVELOPER
 
 // Printer name
-#define CUSTOM_MENDEL_NAME "Prusa i3 MK3S"
+#define CUSTOM_MENDEL_NAME "Prusa i3 MK3S shyblower"
 
 // Electronics
 #define MOTHERBOARD BOARD_EINSY_1_0a
@@ -42,9 +51,11 @@
  *------------------------------------*/
 
 // Steps per unit {X,Y,Z,E}
-//#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,140}
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,280}
-//#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,560}
+#ifdef BONDTECH_EXTRUDER
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,414}
+#else
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,280}
+#endif
 
 // Endstop inverting
 #define X_MIN_ENDSTOP_INVERTING 0 // set to 1 to invert the logic of the endstop.
@@ -69,7 +80,12 @@
 #define X_MIN_POS 0
 #define Y_MAX_POS 212.5
 #define Y_MIN_POS -4 //orig -4
-#define Z_MAX_POS 210
+#ifdef BONDTECH_EXTRUDER
+  #define Z_MAX_POS 205
+#else
+  #define Z_MAX_POS 210
+#endif
+
 #define Z_MIN_POS 0.15
 
 // Canceled home position
@@ -82,7 +98,22 @@
 #define Z_PAUSE_LIFT 20
 
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
-#define HOMING_FEEDRATE {3000, 3000, 800, 0}  // set the homing speeds (mm/min) // 3000 is also valid for stallGuard homing. Valid range: 2200 - 3000
+
+// set the homing speeds (mm/min)
+// latest measurements suggest OMC at 2500 and Moons at 2400
+#ifdef STEPPER_X_09
+  #define HOMING_FEEDRATE_X 2500  // different feedrate needed for reliable X 0.9 degree motor stallGuard
+#else
+  #define HOMING_FEEDRATE_X 3000
+#endif
+
+#ifdef STEPPER_Y_09
+  #define HOMING_FEEDRATE_Y 2500  // different feedrate needed for reliable Y 0.9 degree motor stallGuard
+#else
+  #define HOMING_FEEDRATE_Y 3000
+#endif
+
+#define HOMING_FEEDRATE {HOMING_FEEDRATE_X, HOMING_FEEDRATE_Y, 800, 0}  // set the homing speeds (mm/min) // 3000 is also valid for stallGuard homing. Valid range: 2200 - 3000
 
 //#define DEFAULT_Y_OFFSET    4.f // Default distance of Y_MIN_POS point from endstop, when the printer is not calibrated.
 /**
@@ -208,20 +239,41 @@
 
 #define TMC2130_FCLK 12000000       // fclk = 12MHz
 
-#define TMC2130_USTEPS_XY   16        // microstep resolution for XY axes
+#ifdef STEPPER_X_09
+  #define TMC2130_USTEPS_X   8        // microstep resolution for X axes
+#else
+  #define TMC2130_USTEPS_X   16        // microstep resolution for X axes
+#endif
+
+#ifdef STEPPER_Y_09
+  #define TMC2130_USTEPS_Y   8        // microstep resolution for X axes
+#else
+  #define TMC2130_USTEPS_Y   16        // microstep resolution for X axes
+#endif
+
 #define TMC2130_USTEPS_Z    16        // microstep resolution for Z axis
 #define TMC2130_USTEPS_E    32        // microstep resolution for E axis
 #define TMC2130_INTPOL_XY   1         // extrapolate 256 for XY axes
 #define TMC2130_INTPOL_Z    1         // extrapolate 256 for Z axis
 #define TMC2130_INTPOL_E    1         // extrapolate 256 for E axis
 
-#define TMC2130_PWM_GRAD_X  2         // PWMCONF
-#define TMC2130_PWM_AMPL_X  230       // PWMCONF
+#ifdef STEPPER_X_09
+  #define TMC2130_PWM_GRAD_X  3         // PWMCONF
+  #define TMC2130_PWM_AMPL_X  240       // PWMCONF
+#else
+  #define TMC2130_PWM_GRAD_X  2         // PWMCONF
+  #define TMC2130_PWM_AMPL_X  230       // PWMCONF
+#endif
 #define TMC2130_PWM_AUTO_X  1         // PWMCONF
 #define TMC2130_PWM_FREQ_X  2         // PWMCONF
 
-#define TMC2130_PWM_GRAD_Y  2         // PWMCONF
-#define TMC2130_PWM_AMPL_Y  235       // PWMCONF
+#ifdef STEPPER_Y_09
+  #define TMC2130_PWM_GRAD_Y  3         // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  245       // PWMCONF
+#else
+  #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
+#endif
 #define TMC2130_PWM_AUTO_Y  1         // PWMCONF
 #define TMC2130_PWM_FREQ_Y  2         // PWMCONF
 
@@ -235,10 +287,67 @@
 #define TMC2130_PWM_AUTO_E  1         // PWMCONF
 #define TMC2130_PWM_FREQ_E  2         // PWMCONF
 
-#define TMC2130_TOFF_XYZ    3         // CHOPCONF // fchop = 27.778kHz
-#define TMC2130_TOFF_E      3         // CHOPCONF // fchop = 27.778kHz
+// chopper defines with adjustments for 0.9 motors on x y z e
+//#define TMC2130_TOFF_E      3         // CHOPCONF // fchop = 27.778kHz
 //#define TMC2130_TOFF_E      4         // CHOPCONF // fchop = 21.429kHz
 //#define TMC2130_TOFF_E      5         // CHOPCONF // fchop = 17.442kHz
+
+#ifdef STEPPER_X_09
+  #define TMC2130_TOFF_X 2 // adjusted for 0.9 degree motors
+  #define TMC2130_HSTR_X 2
+  #define TMC2130_HEND_X 0
+  #define TMC2130_TBL_X 1
+  #define TMC2130_RES_X 0
+#else
+  #define TMC2130_TOFF_X 3 // Prusa defaults X
+  #define TMC2130_HSTR_X 5
+  #define TMC2130_HEND_X 1
+  #define TMC2130_TBL_X 2
+  #define TMC2130_RES_X 0
+#endif
+
+#ifdef STEPPER_Y_09
+  #define TMC2130_TOFF_Y 2 // adjusted for 0.9 degree motors
+  #define TMC2130_HSTR_Y 2
+  #define TMC2130_HEND_Y 0
+  #define TMC2130_TBL_Y 1
+  #define TMC2130_RES_Y 0
+#else
+  #define TMC2130_TOFF_Y 3 // Prusa defaults Y
+  #define TMC2130_HSTR_Y 5
+  #define TMC2130_HEND_Y 1
+  #define TMC2130_TBL_Y 2
+  #define TMC2130_RES_Y 0
+#endif
+
+#ifdef STEPPER_Z_09
+  #define TMC2130_TOFF_Z 2 // adjusted for 0.9 degree motors
+  #define TMC2130_HSTR_Z 2
+  #define TMC2130_HEND_Z 0
+  #define TMC2130_TBL_Z 2
+  #define TMC2130_RES_Z 0
+#else
+  #define TMC2130_TOFF_Z 3 // Prusa defaults Z
+  #define TMC2130_HSTR_Z 5
+  #define TMC2130_HEND_Z 1
+  #define TMC2130_TBL_Z 2
+  #define TMC2130_RES_Z 0
+#endif
+
+#ifdef STEPPER_E_09
+  #define TMC2130_TOFF_E 2 // adjusted for 0.9 degree motors
+  #define TMC2130_HSTR_E 2
+  #define TMC2130_HEND_E 0
+  #define TMC2130_TBL_E 2
+  #define TMC2130_RES_E 0
+#else
+  #define TMC2130_TOFF_E 3 // Prusa defaults E
+  #define TMC2130_HSTR_E 5
+  #define TMC2130_HEND_E 1
+  #define TMC2130_TBL_E 2
+  #define TMC2130_RES_E 0
+#endif
+//end chopper defines
 
 //#define TMC2130_STEALTH_E // Extruder stealthChop mode
 //#define TMC2130_CNSTOFF_E // Extruder constant-off-time mode (similar to MK2)
@@ -258,17 +367,50 @@
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
 #define TMC2130_SG_HOMING       1     // stallguard homing
-#define TMC2130_SG_THRS_X       3     // stallguard sensitivity for X axis
-#define TMC2130_SG_THRS_Y       3     // stallguard sensitivity for Y axis
+
+#ifdef STEPPER_X_09 // stallguard homing settings
+  #define TMC2130_SG_THRS_X       3
+  #define TMC2130_SG_THRS_X_HOME  3
+#else
+  #define TMC2130_SG_THRS_X       3    // std stallguard sensitivity for X axis
+  #define TMC2130_SG_THRS_X_HOME  3    // std homing stallguard threshold for X axis
+#endif
+
+#ifdef STEPPER_Y_09
+  #define TMC2130_SG_THRS_Y       3
+  #define TMC2130_SG_THRS_Y_HOME  3 
+#else
+  #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
+  #define TMC2130_SG_THRS_Y_HOME  3    // std homing stallguard threshold for Y axis
+#endif
+
 #define TMC2130_SG_THRS_Z       4     // stallguard sensitivity for Z axis
+#define TMC2130_SG_THRS_Z_HOME  4     // stallguard sensitivity for Z axis
 #define TMC2130_SG_THRS_E       3     // stallguard sensitivity for E axis
-#define TMC2130_SG_THRS_HOME {3, 3, TMC2130_SG_THRS_Z, TMC2130_SG_THRS_E}
+#define TMC2130_SG_THRS_E_HOME  3     // stallguard sensitivity for E axis
 
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
-#define TMC2130_CURRENTS_H {16, 20, 35, 30}  // default holding currents for all axes
-#define TMC2130_CURRENTS_R {16, 20, 35, 30}  // default running currents for all axes
+#define TMC2130_CURRENTS_H {16, 18, 35, 30}  // default holding currents for all axes
+#define TMC2130_CURRENTS_R {16, 18, 35, 30}  // default running currents for all axes
 #define TMC2130_CURRENTS_R_HOME {8, 10, 20, 18}  // homing running currents for all axes
-// #define TMC2130_UNLOAD_CURRENT_R 12			 // lower current for M600 to protect filament sensor - Unused
+
+// running currents for homing
+#ifdef STEPPER_X_09
+  #define X_AXIS_CURRENT_R_HOME 10  // adjust x homing current slightly higher for 0.9 x
+#else 
+  #define X_AXIS_CURRENT_R_HOME 8
+#endif
+#ifdef STEPPER_Y_09
+  #define Y_AXIS_CURRENT_R_HOME 12  // adjust y homing current slightly higher for 0.9 y
+#else 
+  #define Y_AXIS_CURRENT_R_HOME 10
+#endif
+#define TMC2130_CURRENTS_R_HOME {X_AXIS_CURRENT_R_HOME, Y_AXIS_CURRENT_R_HOME, 20, 18}  // homing running currents for all axes
+// ===
+
+#ifdef BONDETECH_EXTRUDER
+  #define TMC2130_UNLOAD_CURRENT_R 12			 // lower current for M600 to protect filament sensor
+#endif
 
 #define TMC2130_STEALTH_Z
 
@@ -341,11 +483,19 @@
 // Load filament commands
 #define LOAD_FILAMENT_0 "M83"
 #define LOAD_FILAMENT_1 "G1 E70 F400"
-#define LOAD_FILAMENT_2 "G1 E40 F100"
+#ifdef BONDTECH_EXTRUDER
+  #define LOAD_FILAMENT_2 "G1 E50 F100"
+#else
+  #define LOAD_FILAMENT_2 "G1 E40 F100"
+#endif
 
 // Unload filament commands
 #define UNLOAD_FILAMENT_0 "M83"
-#define UNLOAD_FILAMENT_1 "G1 E-80 F7000"
+#ifdef BONDTECH_EXTRUDER
+  #define UNLOAD_FILAMENT_1 "G1 E-100 F7000"
+#else
+  #define UNLOAD_FILAMENT_1 "G1 E-80 F7000"
+#endif
 
 /*------------------------------------
  CHANGE FILAMENT SETTINGS
@@ -361,7 +511,12 @@
 #define FILAMENTCHANGE_FINALRETRACT -80
 
 #define FILAMENTCHANGE_FIRSTFEED 70 //E distance in mm for fast filament loading sequence used used in filament change (M600)
-#define FILAMENTCHANGE_FINALFEED 25 //E distance in mm for slow filament loading sequence used used in filament change (M600) and filament load (M701) 
+#ifdef BONDTECH_EXTRUDER
+  #define FILAMENTCHANGE_FINALFEED 35 //E distance in mm for slow filament loading sequence used used in filament change (M600) and filament load (M701) 
+#else
+  #define FILAMENTCHANGE_FINALFEED 25 //E distance in mm for slow filament loading sequence used used in filament change (M600) and filament load (M701) 
+#endif
+
 #define FILAMENTCHANGE_RECFEED 5
 
 #define FILAMENTCHANGE_XYFEED 50
