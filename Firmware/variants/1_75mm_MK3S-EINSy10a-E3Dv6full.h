@@ -258,7 +258,7 @@
 #define TMC2130_INTPOL_E    1         // extrapolate 256 for E axis
 
 #ifdef STEPPER_X_09
-  #define TMC2130_PWM_GRAD_X  3         // PWMCONF
+  #define TMC2130_PWM_GRAD_X  4         // PWMCONF
   #define TMC2130_PWM_AMPL_X  240       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
@@ -268,8 +268,8 @@
 #define TMC2130_PWM_FREQ_X  2         // PWMCONF
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_PWM_GRAD_Y  3         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  245       // PWMCONF
+  #define TMC2130_PWM_GRAD_Y  4         // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  245        // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
@@ -293,7 +293,7 @@
 //#define TMC2130_TOFF_E      5         // CHOPCONF // fchop = 17.442kHz
 
 #ifdef STEPPER_X_09
-  #define TMC2130_TOFF_X 2 // adjusted for 0.9 degree motors
+  #define TMC2130_TOFF_X 1 // adjusted for 0.9 degree motors
   #define TMC2130_HSTR_X 2
   #define TMC2130_HEND_X 0
   #define TMC2130_TBL_X 1
@@ -307,7 +307,7 @@
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_TOFF_Y 2 // adjusted for 0.9 degree motors
+  #define TMC2130_TOFF_Y 1 // adjusted for 0.9 degree motors
   #define TMC2130_HSTR_Y 2
   #define TMC2130_HEND_Y 0
   #define TMC2130_TBL_Y 1
@@ -390,8 +390,8 @@
 #define TMC2130_SG_THRS_E_HOME  3     // stallguard sensitivity for E axis
 
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
-#define TMC2130_CURRENTS_H {16, 18, 35, 30}  // default holding currents for all axes
-#define TMC2130_CURRENTS_R {16, 18, 35, 30}  // default running currents for all axes
+#define TMC2130_CURRENTS_H {14, 18, 35, 30}  // default holding currents for all axes
+#define TMC2130_CURRENTS_R {14, 18, 35, 30}  // default running currents for all axes
 #define TMC2130_CURRENTS_R_HOME {8, 10, 20, 18}  // homing running currents for all axes
 
 // running currents for homing
