@@ -258,7 +258,7 @@
 #define TMC2130_INTPOL_E    1         // extrapolate 256 for E axis
 
 #ifdef STEPPER_X_09
-  #define TMC2130_PWM_GRAD_X  4         // PWMCONF
+  #define TMC2130_PWM_GRAD_X  2         // PWMCONF
   #define TMC2130_PWM_AMPL_X  240       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
@@ -268,7 +268,7 @@
 #define TMC2130_PWM_FREQ_X  2         // PWMCONF
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_PWM_GRAD_Y  4         // PWMCONF
+  #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  245        // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
@@ -293,7 +293,7 @@
 //#define TMC2130_TOFF_E      5         // CHOPCONF // fchop = 17.442kHz
 
 #ifdef STEPPER_X_09
-  #define TMC2130_TOFF_X 1 // adjusted for 0.9 degree motors
+  #define TMC2130_TOFF_X 2 // adjusted for 0.9 degree motors
   #define TMC2130_HSTR_X 2
   #define TMC2130_HEND_X 0
   #define TMC2130_TBL_X 1
@@ -307,7 +307,7 @@
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_TOFF_Y 1 // adjusted for 0.9 degree motors
+  #define TMC2130_TOFF_Y 2 // adjusted for 0.9 degree motors
   #define TMC2130_HSTR_Y 2
   #define TMC2130_HEND_Y 0
   #define TMC2130_TBL_Y 1
