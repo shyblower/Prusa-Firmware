@@ -390,9 +390,18 @@
 #define TMC2130_SG_THRS_E_HOME  3     // stallguard sensitivity for E axis
 
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
-#define TMC2130_CURRENTS_H {14, 18, 35, 30}  // default holding currents for all axes
-#define TMC2130_CURRENTS_R {14, 18, 35, 30}  // default running currents for all axes
-#define TMC2130_CURRENTS_R_HOME {8, 10, 20, 18}  // homing running currents for all axes
+#ifdef STEPPER_X_09
+  #define X_AXIS_CURRENT 12  // adjust x homing current slightly higher for 0.9 x
+#else 
+  #define X_AXIS_CURRENT 16
+#endif
+#ifdef STEPPER_Y_09
+  #define Y_AXIS_CURRENT 14  // adjust y homing current slightly higher for 0.9 y
+#else 
+  #define Y_AXIS_CURRENT 20
+#endif
+#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default holding currents for all axes
+#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default running currents for all axes
 
 // running currents for homing
 #ifdef STEPPER_X_09
