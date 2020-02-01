@@ -259,7 +259,7 @@
 
 #ifdef STEPPER_X_09
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
-  #define TMC2130_PWM_AMPL_X  240       // PWMCONF
+  #define TMC2130_PWM_AMPL_X  230       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
   #define TMC2130_PWM_AMPL_X  230       // PWMCONF
@@ -269,7 +269,7 @@
 
 #ifdef STEPPER_Y_09
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  245        // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  235        // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
@@ -391,17 +391,19 @@
 
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
 #ifdef STEPPER_X_09
-  #define X_AXIS_CURRENT 12  // adjust x homing current slightly higher for 0.9 x
+  #define X_AXIS_CURRENT 14
 #else 
   #define X_AXIS_CURRENT 16
 #endif
 #ifdef STEPPER_Y_09
-  #define Y_AXIS_CURRENT 14  // adjust y homing current slightly higher for 0.9 y
+  #define Y_AXIS_CURRENT 14
 #else 
   #define Y_AXIS_CURRENT 20
 #endif
-#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default holding currents for all axes
-#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default running currents for all axes
+//#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default holding currents for all axes
+//#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default running currents for all axes
+#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 30, 25}  // default holding currents for all axes
+#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 30, 25}  // default running currents for all axes
 
 // running currents for homing
 #ifdef STEPPER_X_09
@@ -410,7 +412,7 @@
   #define X_AXIS_CURRENT_R_HOME 8
 #endif
 #ifdef STEPPER_Y_09
-  #define Y_AXIS_CURRENT_R_HOME 12  // adjust y homing current slightly higher for 0.9 y
+  #define Y_AXIS_CURRENT_R_HOME 10  // adjust y homing current slightly higher for 0.9 y
 #else 
   #define Y_AXIS_CURRENT_R_HOME 10
 #endif
