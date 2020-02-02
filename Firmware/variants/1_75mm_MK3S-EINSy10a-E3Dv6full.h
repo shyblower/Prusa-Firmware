@@ -2,15 +2,7 @@
 #define CONFIGURATION_PRUSA_H
 
 #include <limits.h>
-#include "printers.h"
-
-
-/*------------------------------------
- MODDING SETTINGS
- *------------------------------------*/
-#define BONDTECH_EXTRUDER
-#define STEPPER_X_09
-#define STEPPER_Y_09
+#include "../printers.h"
 
 /*------------------------------------
  GENERAL SETTINGS
