@@ -176,8 +176,8 @@
 // this value is litlebit higher that real limit, because ambient termistor is on the board and is temperated from it,
 // temperature inside the case is around 31C for ambient temperature 25C, when the printer is powered on long time and idle
 // the real limit is 15C (same as MINTEMP limit), this is because 15C is end of scale for both used thermistors (bed, heater)
-#define MINTEMP_MINAMBIENT      10
-#define MINTEMP_MINAMBIENT_RAW  1002
+#define MINTEMP_MINAMBIENT      25
+#define MINTEMP_MINAMBIENT_RAW  978
 
 #define DEBUG_DCODE3
 
@@ -361,7 +361,7 @@
 #define TMC2130_SG_HOMING       1     // stallguard homing
 
 #ifdef STEPPER_X_09 // stallguard homing settings
-  #define TMC2130_SG_THRS_X       3
+  #define TMC2130_SG_THRS_X       6
   #define TMC2130_SG_THRS_X_HOME  3
 #else
   #define TMC2130_SG_THRS_X       3    // std stallguard sensitivity for X axis
@@ -369,7 +369,7 @@
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_SG_THRS_Y       3
+  #define TMC2130_SG_THRS_Y       6 
   #define TMC2130_SG_THRS_Y_HOME  3 
 #else
   #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
@@ -388,7 +388,7 @@
   #define X_AXIS_CURRENT 16
 #endif
 #ifdef STEPPER_Y_09
-  #define Y_AXIS_CURRENT 14
+  #define Y_AXIS_CURRENT 16
 #else 
   #define Y_AXIS_CURRENT 20
 #endif
@@ -399,7 +399,7 @@
 
 // running currents for homing
 #ifdef STEPPER_X_09
-  #define X_AXIS_CURRENT_R_HOME 10  // adjust x homing current slightly higher for 0.9 x
+  #define X_AXIS_CURRENT_R_HOME 8  // adjust x homing current slightly higher for 0.9 x
 #else 
   #define X_AXIS_CURRENT_R_HOME 8
 #endif
