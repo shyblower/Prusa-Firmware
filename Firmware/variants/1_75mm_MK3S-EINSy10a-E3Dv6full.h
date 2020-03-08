@@ -251,7 +251,7 @@
 
 #ifdef STEPPER_X_09
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
-  #define TMC2130_PWM_AMPL_X  230       // PWMCONF
+  #define TMC2130_PWM_AMPL_X  235       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
   #define TMC2130_PWM_AMPL_X  230       // PWMCONF
@@ -261,7 +261,7 @@
 
 #ifdef STEPPER_Y_09
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  235        // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  240        // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
