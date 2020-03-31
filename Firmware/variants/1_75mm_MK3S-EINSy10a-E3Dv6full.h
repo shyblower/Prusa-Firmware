@@ -144,7 +144,7 @@
 
 //Crash detection
 #define CRASHDET_TIMER 45 //seconds
-#define CRASHDET_COUNTER_MAX 3 
+#define CRASHDET_COUNTER_MAX 3
 
 // New XYZ calibration
 #define NEW_XYZCAL
@@ -167,7 +167,7 @@
 #define FILAMENT_SENSOR
 #define IR_SENSOR
 
-// Backlash - 
+// Backlash -
 //#define BACKLASH_X
 //#define BACKLASH_Y
 
@@ -190,15 +190,15 @@
 #define DEBUG_STACK_MONITOR        //Stack monitor in stepper ISR
 //#define DEBUG_FSENSOR_LOG          //Reports fsensor status to serial
 //#define DEBUG_CRASHDET_COUNTERS  //Display crash-detection counters on LCD
-//#define DEBUG_RESUME_PRINT       //Resume/save print debug enable 
-//#define DEBUG_UVLO_AUTOMATIC_RECOVER // Power panic automatic recovery debug output 
+//#define DEBUG_RESUME_PRINT       //Resume/save print debug enable
+//#define DEBUG_UVLO_AUTOMATIC_RECOVER // Power panic automatic recovery debug output
 //#define DEBUG_DISABLE_XMINLIMIT  //x min limit ignored
 //#define DEBUG_DISABLE_XMAXLIMIT  //x max limit ignored
 //#define DEBUG_DISABLE_YMINLIMIT  //y min limit ignored
 //#define DEBUG_DISABLE_YMAXLIMIT  //y max limit ignored
 //#define DEBUG_DISABLE_ZMINLIMIT  //z min limit ignored
 //#define DEBUG_DISABLE_ZMAXLIMIT  //z max limit ignored
-#define DEBUG_DISABLE_STARTMSGS //no startup messages 
+#define DEBUG_DISABLE_STARTMSGS //no startup messages
 //#define DEBUG_DISABLE_MINTEMP   //mintemp error ignored
 //#define DEBUG_DISABLE_SWLIMITS  //sw limits ignored
 //#define DEBUG_DISABLE_LCD_STATUS_LINE  //empty four lcd line
@@ -250,7 +250,7 @@
 #define TMC2130_INTPOL_E    1         // extrapolate 256 for E axis
 
 #ifdef STEPPER_X_09
-  #define TMC2130_PWM_GRAD_X  2         // PWMCONF
+  #define TMC2130_PWM_GRAD_X  4         // PWMCONF
   #define TMC2130_PWM_AMPL_X  235       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
@@ -260,8 +260,8 @@
 #define TMC2130_PWM_FREQ_X  2         // PWMCONF
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  240        // PWMCONF
+  #define TMC2130_PWM_GRAD_Y  4         // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  240       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
@@ -361,7 +361,7 @@
 #define TMC2130_SG_HOMING       1     // stallguard homing
 
 #ifdef STEPPER_X_09 // stallguard homing settings
-  #define TMC2130_SG_THRS_X       6
+  #define TMC2130_SG_THRS_X       5
   #define TMC2130_SG_THRS_X_HOME  3
 #else
   #define TMC2130_SG_THRS_X       3    // std stallguard sensitivity for X axis
@@ -369,8 +369,8 @@
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_SG_THRS_Y       6 
-  #define TMC2130_SG_THRS_Y_HOME  3 
+  #define TMC2130_SG_THRS_Y       5
+  #define TMC2130_SG_THRS_Y_HOME  3
 #else
   #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
   #define TMC2130_SG_THRS_Y_HOME  3    // std homing stallguard threshold for Y axis
@@ -384,12 +384,12 @@
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
 #ifdef STEPPER_X_09
   #define X_AXIS_CURRENT 14
-#else 
+#else
   #define X_AXIS_CURRENT 16
 #endif
 #ifdef STEPPER_Y_09
-  #define Y_AXIS_CURRENT 16
-#else 
+  #define Y_AXIS_CURRENT 18
+#else
   #define Y_AXIS_CURRENT 20
 #endif
 //#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default holding currents for all axes
@@ -400,12 +400,12 @@
 // running currents for homing
 #ifdef STEPPER_X_09
   #define X_AXIS_CURRENT_R_HOME 8  // adjust x homing current slightly higher for 0.9 x
-#else 
+#else
   #define X_AXIS_CURRENT_R_HOME 8
 #endif
 #ifdef STEPPER_Y_09
   #define Y_AXIS_CURRENT_R_HOME 10  // adjust y homing current slightly higher for 0.9 y
-#else 
+#else
   #define Y_AXIS_CURRENT_R_HOME 10
 #endif
 #define TMC2130_CURRENTS_R_HOME {X_AXIS_CURRENT_R_HOME, Y_AXIS_CURRENT_R_HOME, 20, 18}  // homing running currents for all axes
@@ -510,25 +510,24 @@
 #define FILAMENTCHANGE_XPOS 211
 #define FILAMENTCHANGE_YPOS 0
 #define FILAMENTCHANGE_ZADD 2
-#define FILAMENTCHANGE_FIRSTRETRACT -2
+#define FILAMENTCHANGE_FIRSTRETRACT -6
 #define FILAMENTCHANGE_FINALRETRACT -80
 
 #define FILAMENTCHANGE_FIRSTFEED 70 //E distance in mm for fast filament loading sequence used used in filament change (M600)
 #ifdef BONDTECH_EXTRUDER
-  #define FILAMENTCHANGE_FINALFEED 35 //E distance in mm for slow filament loading sequence used used in filament change (M600) and filament load (M701) 
+  #define FILAMENTCHANGE_FINALFEED 35 //E distance in mm for slow filament loading sequence used used in filament change (M600) and filament load (M701)
 #else
-  #define FILAMENTCHANGE_FINALFEED 25 //E distance in mm for slow filament loading sequence used used in filament change (M600) and filament load (M701) 
+  #define FILAMENTCHANGE_FINALFEED 25 //E distance in mm for slow filament loading sequence used used in filament change (M600) and filament load (M701)
 #endif
 
 #define FILAMENTCHANGE_RECFEED 5
 
 #define FILAMENTCHANGE_XYFEED 50
 #define FILAMENTCHANGE_EFEED_FIRST 20 // feedrate in mm/s for fast filament loading sequence used in filament change (M600)
-#define FILAMENTCHANGE_EFEED_FINAL 3.3f // feedrate in mm/s for slow filament loading sequence used in filament change (M600) and filament load (M701) 
-//#define FILAMENTCHANGE_RFEED 400
-#define FILAMENTCHANGE_RFEED 7000 / 60
+#define FILAMENTCHANGE_EFEED_FINAL 3.3f // feedrate in mm/s for slow filament loading sequence used in filament change (M600) and filament load (M701)
+#define FILAMENTCHANGE_RFEED 20 // first retraction speed
 #define FILAMENTCHANGE_EXFEED 2
-#define FILAMENTCHANGE_ZFEED 15
+#define FILAMENTCHANGE_ZFEED 20
 
 #endif
 
@@ -783,7 +782,7 @@
 // "dropsegments" steps long. All the above rules still need to apply.
 #define UVLO_TINY_Z_AXIS_SHIFT 0.16
 // If power panic occured, and the current temperature is higher then target temperature before interrupt minus this offset, print will be recovered automatically.
-#define AUTOMATIC_UVLO_BED_TEMP_OFFSET 5 
+#define AUTOMATIC_UVLO_BED_TEMP_OFFSET 5
 
 #define HEATBED_V2
 
