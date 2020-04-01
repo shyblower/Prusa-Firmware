@@ -388,7 +388,7 @@
   #define X_AXIS_CURRENT 16
 #endif
 #ifdef STEPPER_Y_09
-  #define Y_AXIS_CURRENT 19
+  #define Y_AXIS_CURRENT 21
 #else
   #define Y_AXIS_CURRENT 20
 #endif
