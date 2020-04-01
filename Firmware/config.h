@@ -5,12 +5,10 @@
 #include "Configuration_prusa.h"
 #include "pins.h"
 
-#if (defined(VOLT_IR_PIN) && defined(IR_SENSOR))
-# define IR_SENSOR_ANALOG
-#endif
+#define IR_SENSOR_ANALOG (defined(VOLT_IR_PIN) && defined(IR_SENSOR))
 
 //ADC configuration
-#ifndef IR_SENSOR_ANALOG
+#if !IR_SENSOR_ANALOG
 #define ADC_CHAN_MSK      0b0000001001011111 //used AD channels bit mask (0,1,2,3,4,6,9)
 #define ADC_DIDR_MSK      0b0000001001011111 //AD channels DIDR mask (1 ~ disabled digital input)
 #define ADC_CHAN_CNT      7         //number of used channels)

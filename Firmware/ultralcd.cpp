@@ -68,10 +68,6 @@ uint8_t SilentModeMenu_MMU = 1; //activate mmu unit stealth mode
 
 int8_t FSensorStateMenu = 1;
 
-#ifdef IR_SENSOR_ANALOG
-bool bMenuFSDetect=false;
-#endif //IR_SENSOR_ANALOG
-
 
 #ifdef SDCARD_SORT_ALPHA
 bool presort_flag = false;
@@ -118,7 +114,7 @@ static const char* lcd_display_message_fullscreen_nonBlocking_P(const char *msg,
 // void copy_and_scalePID_d();
 
 /* Different menus */
-//static void lcd_status_screen();                // NOT static due to using inside "Marlin_main" module ("manage_inactivity()")
+static void lcd_status_screen();
 #if (LANG_MODE != 0)
 static void lcd_language_menu();
 #endif
@@ -239,9 +235,8 @@ static FanCheck lcd_selftest_fan_auto(int _fan);
 static bool lcd_selftest_fsensor();
 #endif //PAT9125
 static bool selftest_irsensor();
-#ifdef IR_SENSOR_ANALOG
-static bool lcd_selftest_IRsensor(bool bStandalone=false);
-static void lcd_detect_IRsensor();
+#if IR_SENSOR_ANALOG
+static bool lcd_selftest_IRsensor();
 #endif //IR_SENSOR_ANALOG
 static void lcd_selftest_error(TestError error, const char *_error_1, const char *_error_2);
 static void lcd_colorprint_change();
@@ -980,7 +975,7 @@ void lcdui_print_status_screen(void)
 }
 
 // Main status screen. It's up to the implementation specific part to show what is needed. As this is very display dependent
-void lcd_status_screen()                          // NOT static due to using inside "Marlin_main" module ("manage_inactivity()")
+static void lcd_status_screen()
 {
 	if (firstrun == 1)
 	{
@@ -1957,7 +1952,7 @@ static void lcd_menu_temperatures()
     menu_back_if_clicked();
 }
 
-#if defined (VOLT_BED_PIN) || defined (VOLT_PWR_PIN) || defined(IR_SENSOR_ANALOG)
+#if defined (VOLT_BED_PIN) || defined (VOLT_PWR_PIN) || IR_SENSOR_ANALOG
 #define VOLT_DIV_R1 10000
 #define VOLT_DIV_R2 2370
 #define VOLT_DIV_FAC ((float)VOLT_DIV_R2 / (VOLT_DIV_R2 + VOLT_DIV_R1))
@@ -1969,24 +1964,27 @@ static void lcd_menu_temperatures()
 //! |                    |
 //! | PWR:         00.0V |	c=12 r=1
 //! | Bed:         00.0V |	c=12 r=1
-//! | IR :         00.0V |  c=12 r=1 optional
+//! |                    |
 //! ----------------------
 //! @endcode
 //! @todo Positioning of the messages and values on LCD aren't fixed to their exact place. This causes issues with translations.
 static void lcd_menu_voltages()
 {
-    lcd_timeoutToStatus.stop(); //infinite timeout
-    float volt_pwr = VOLT_DIV_REF * ((float)current_voltage_raw_pwr / (1023 * OVERSAMPLENR)) / VOLT_DIV_FAC;
-    float volt_bed = VOLT_DIV_REF * ((float)current_voltage_raw_bed / (1023 * OVERSAMPLENR)) / VOLT_DIV_FAC;
-    lcd_home();
-    lcd_printf_P(PSTR(" PWR:      %4.1fV\n" " BED:      %4.1fV"), volt_pwr, volt_bed);
-#ifdef IR_SENSOR_ANALOG
-    float volt_IR = VOLT_DIV_REF * ((float)current_voltage_raw_IR / (1023 * OVERSAMPLENR));
-    lcd_printf_P(PSTR("\n IR :       %3.1fV"),volt_IR);
+	lcd_timeoutToStatus.stop(); //infinite timeout
+	float volt_pwr = VOLT_DIV_REF * ((float)current_voltage_raw_pwr / (1023 * OVERSAMPLENR)) / VOLT_DIV_FAC;
+	float volt_bed = VOLT_DIV_REF * ((float)current_voltage_raw_bed / (1023 * OVERSAMPLENR)) / VOLT_DIV_FAC;
+	lcd_home();
+#if !IR_SENSOR_ANALOG
+	lcd_printf_P(PSTR("\n"));
+#endif //!IR_SENSOR_ANALOG
+     lcd_printf_P(PSTR(" PWR:      %4.1fV\n" " BED:      %4.1fV"), volt_pwr, volt_bed);
+#if IR_SENSOR_ANALOG
+     float volt_IR = VOLT_DIV_REF * ((float)current_voltage_raw_IR / (1023 * OVERSAMPLENR));
+     lcd_printf_P(PSTR("\n IR :       %3.1fV"),volt_IR);
 #endif //IR_SENSOR_ANALOG
-    menu_back_if_clicked();
+     menu_back_if_clicked();
 }
-#endif //defined (VOLT_BED_PIN) || defined (VOLT_PWR_PIN) || defined(IR_SENSOR_ANALOG)
+#endif //defined (VOLT_BED_PIN) || defined (VOLT_PWR_PIN) || IR_SENSOR_ANALOG
 
 #ifdef TMC2130
 //! @brief Show Belt Status
@@ -2159,23 +2157,6 @@ static void lcd_support_menu()
   MENU_ITEM_BACK_P(STR_SEPARATOR);
   MENU_ITEM_BACK_P(_i("Date:"));////MSG_DATE c=17 r=1
   MENU_ITEM_BACK_P(PSTR(__DATE__));
-
-#ifdef IR_SENSOR_ANALOG
-  MENU_ITEM_BACK_P(STR_SEPARATOR);
-  MENU_ITEM_BACK_P(PSTR("Fil. sensor v.:"));
-  switch(oFsensorPCB)
-       {
-       case ClFsensorPCB::_Old:
-            MENU_ITEM_BACK_P(PSTR(" 03 or older"));
-            break;
-       case ClFsensorPCB::_Rev03b:
-            MENU_ITEM_BACK_P(PSTR(" 03b or newer"));
-            break;
-       case ClFsensorPCB::_Undef:
-       default:
-            MENU_ITEM_BACK_P(PSTR(" state unknown"));
-       }
-#endif // IR_SENSOR_ANALOG
 
 	MENU_ITEM_BACK_P(STR_SEPARATOR);
 	if (mmu_enabled)
@@ -5654,7 +5635,7 @@ SETTINGS_VERSION;
 MENU_END();
 }
 
-#ifdef IR_SENSOR_ANALOG
+#if IR_SENSOR_ANALOG
 static void lcd_fsensor_actionNA_set(void)
 {
 switch(oFsensorActionNA)
@@ -5720,9 +5701,8 @@ void lcd_hw_setup_menu(void)                      // can not be "static"
     SETTINGS_NOZZLE;
     MENU_ITEM_SUBMENU_P(_i("Checks"), lcd_checking_menu);
 
-#ifdef IR_SENSOR_ANALOG
+#if IR_SENSOR_ANALOG
     FSENSOR_ACTION_NA;
-    MENU_ITEM_FUNCTION_P(PSTR("Fsensor Detection"), lcd_detect_IRsensor);
 #endif //IR_SENSOR_ANALOG
     MENU_END();
 }
@@ -7145,7 +7125,7 @@ static void lcd_tune_menu()
 	else {
 		MENU_ITEM_TOGGLE_P(_T(MSG_FSENSOR), _T(MSG_ON), lcd_fsensor_state_set);
 	}
-#ifdef IR_SENSOR_ANALOG
+#if IR_SENSOR_ANALOG
      FSENSOR_ACTION_NA;
 #endif //IR_SENSOR_ANALOG
 #endif //FILAMENT_SENSOR
@@ -7373,7 +7353,10 @@ void lcd_print_stop()
 
     planner_abort_hard(); //needs to be done since plan_buffer_line resets waiting_inside_plan_buffer_line_print_aborted to false. Also copies current to destination.
 
-    axis_relative_modes = E_AXIS_MASK; //XYZ absolute, E relative
+    axis_relative_modes[X_AXIS] = false;
+    axis_relative_modes[Y_AXIS] = false;
+    axis_relative_modes[Z_AXIS] = false;
+    axis_relative_modes[E_AXIS] = true;
 
     isPrintPaused = false; //clear isPrintPaused flag to allow starting next print after pause->stop scenario.
 }
@@ -7488,95 +7471,73 @@ void lcd_belttest_print(const char* msg, uint16_t X, uint16_t Y)
 }
 void lcd_belttest()
 {
+    int _progress = 0;
     bool _result = true;
-
-    #ifdef TMC2130 // Belttest requires high power mode. Enable it.
-	    FORCE_HIGH_POWER_START;
-    #endif
-
     uint16_t   X = eeprom_read_word((uint16_t*)(EEPROM_BELTSTATUS_X));
     uint16_t   Y = eeprom_read_word((uint16_t*)(EEPROM_BELTSTATUS_Y));
     lcd_belttest_print(_i("Checking X..."), X, Y);
 
+    _delay(2000);
     KEEPALIVE_STATE(IN_HANDLER);
 
     _result = lcd_selfcheck_axis_sg(X_AXIS);
     X = eeprom_read_word((uint16_t*)(EEPROM_BELTSTATUS_X));
-    if (_result){
-        lcd_belttest_print(_i("Checking Y..."), X, Y);
-        _result = lcd_selfcheck_axis_sg(Y_AXIS);
-        Y = eeprom_read_word((uint16_t*)(EEPROM_BELTSTATUS_Y));
-    }
-
-    if (!_result) {
+    if (!_result){
         lcd_belttest_print(_i("Error"), X, Y);
-    } else {
-        lcd_belttest_print(_i("Done"), X, Y);
+        return;
     }
 
-    #ifdef TMC2130
-	    FORCE_HIGH_POWER_END;
-    #endif
+    lcd_belttest_print(_i("Checking Y..."), X, Y);
+    _result = lcd_selfcheck_axis_sg(Y_AXIS);
+    Y = eeprom_read_word((uint16_t*)(EEPROM_BELTSTATUS_Y));
+
+    if (!_result){
+        lcd_belttest_print(_i("Error"), X, Y);
+        lcd_clear();
+        return;
+    }
+
+
+    lcd_belttest_print(_i("Done"), X, Y);
 
     KEEPALIVE_STATE(NOT_BUSY);
     _delay(3000);
 }
 #endif //TMC2130
 
-#ifdef IR_SENSOR_ANALOG
-// called also from marlin_main.cpp
-void printf_IRSensorAnalogBoardChange(bool bPCBrev03b){
-    printf_P(PSTR("Filament sensor board change detected: revision %S\n"), bPCBrev03b ? PSTR("03b or newer") : PSTR("03 or older"));
-}
-
-static bool lcd_selftest_IRsensor(bool bStandalone)
+#if IR_SENSOR_ANALOG
+static bool lcd_selftest_IRsensor()
 {
-    bool bAction;
-    bool bPCBrev03b;
-    uint16_t volt_IR_int;
-    float volt_IR;
+bool bAction;
+bool bPCBrev03b;
+uint16_t volt_IR_int;
+float volt_IR;
 
-    volt_IR_int=current_voltage_raw_IR;
-    bPCBrev03b=(volt_IR_int<((int)IRsensor_Hopen_TRESHOLD));
-    volt_IR=VOLT_DIV_REF*((float)volt_IR_int/(1023*OVERSAMPLENR));
-    printf_P(PSTR("Measured filament sensor high level: %4.2fV\n"),volt_IR);
-    if(volt_IR_int < ((int)IRsensor_Hmin_TRESHOLD)){
-        if(!bStandalone)
-            lcd_selftest_error(TestError::FsensorLevel,"HIGH","");
-        return(false);
-    }
-    lcd_show_fullscreen_message_and_wait_P(_i("Please insert filament (but not load them!) into extruder and then press the knob."));
-    volt_IR_int=current_voltage_raw_IR;
-    volt_IR=VOLT_DIV_REF*((float)volt_IR_int/(1023*OVERSAMPLENR));
-    printf_P(PSTR("Measured filament sensor low level: %4.2fV\n"),volt_IR);
-    if(volt_IR_int > ((int)IRsensor_Lmax_TRESHOLD)){
-        if(!bStandalone)
-            lcd_selftest_error(TestError::FsensorLevel,"LOW","");
-        return(false);
-    }
-    if((bPCBrev03b?1:0)!=(uint8_t)oFsensorPCB){        // safer then "(uint8_t)bPCBrev03b"
-        printf_IRSensorAnalogBoardChange(bPCBrev03b);
-        oFsensorPCB=bPCBrev03b?ClFsensorPCB::_Rev03b:ClFsensorPCB::_Old;
-        eeprom_update_byte((uint8_t*)EEPROM_FSENSOR_PCB,(uint8_t)oFsensorPCB);
-    }
-    return(true);
-}
-
-static void lcd_detect_IRsensor(){
-    bool bAction;
-
-    bMenuFSDetect = true;                               // inhibits some code inside "manage_inactivity()"
-    bAction = lcd_show_fullscreen_message_yes_no_and_wait_P(_i("Is the filament loaded?"), false, false);
-    if(!bAction){
-        lcd_show_fullscreen_message_and_wait_P(_i("Please unload the filament first, then repeat this action."));
-        return;
-    }
-    bAction = lcd_selftest_IRsensor(true);
-    if(bAction)
-        lcd_show_fullscreen_message_and_wait_P(_i("Sensor verified, remove the filament now."));
-    else
-        lcd_show_fullscreen_message_and_wait_P(_i("Verification failed, remove the filament and try again."));
-    bMenuFSDetect=false;                              // de-inhibits some code inside "manage_inactivity()"
+volt_IR_int=current_voltage_raw_IR;
+bPCBrev03b=(volt_IR_int<((int)IRsensor_Hopen_TRESHOLD));
+volt_IR=VOLT_DIV_REF*((float)volt_IR_int/(1023*OVERSAMPLENR));
+printf_P(PSTR("Measured filament sensor high level: %4.2fV\n"),volt_IR);
+if(volt_IR_int<((int)IRsensor_Hmin_TRESHOLD))
+     {
+     lcd_selftest_error(TestError::FsensorLevel,"HIGH","");
+     return(false);
+     }
+lcd_show_fullscreen_message_and_wait_P(_i("Please insert filament (but not load them!) into extruder and then press the knob."));
+volt_IR_int=current_voltage_raw_IR;
+volt_IR=VOLT_DIV_REF*((float)volt_IR_int/(1023*OVERSAMPLENR));
+printf_P(PSTR("Measured filament sensor low level: %4.2fV\n"),volt_IR);
+if(volt_IR_int>((int)IRsensor_Lmax_TRESHOLD))
+     {
+     lcd_selftest_error(TestError::FsensorLevel,"LOW","");
+     return(false);
+     }
+if((bPCBrev03b?1:0)!=(uint8_t)oFsensorPCB)        // safer then "(uint8_t)bPCBrev03b"
+     {
+     printf_P(PSTR("Filament sensor board change detected: revision %S\n"),bPCBrev03b?PSTR("03b or newer"):PSTR("03 or older"));
+     oFsensorPCB=bPCBrev03b?ClFsensorPCB::_Rev03b:ClFsensorPCB::_Old;
+     eeprom_update_byte((uint8_t*)EEPROM_FSENSOR_PCB,(uint8_t)oFsensorPCB);
+     }
+return(true);
 }
 #endif //IR_SENSOR_ANALOG
 
@@ -7590,8 +7551,7 @@ bool lcd_selftest()
 	int _progress = 0;
 	bool _result = true;
 	bool _swapped_fan = false;
-//#ifdef IR_SENSOR_ANALOG
-#if (0)
+#if IR_SENSOR_ANALOG
      bool bAction;
      bAction=lcd_show_fullscreen_message_yes_no_and_wait_P(_i("Is the filament unloaded?"),false,true);
      if(!bAction)
@@ -7603,7 +7563,10 @@ bool lcd_selftest()
 	#ifdef TMC2130
 	  FORCE_HIGH_POWER_START;
 	#endif // TMC2130
-	FORCE_BL_ON_START;
+     _delay(2000);
+
+    FORCE_BL_ON_START;
+
 	_delay(2000);
 	KEEPALIVE_STATE(IN_HANDLER);
 
@@ -7726,31 +7689,21 @@ bool lcd_selftest()
 #ifdef TMC2130
 		tmc2130_home_exit();
 		enable_endstops(false);
+		current_position[X_AXIS] = current_position[X_AXIS] + 14;
+		current_position[Y_AXIS] = current_position[Y_AXIS] + 12;
 #endif
 
 		//homeaxis(X_AXIS);
 		//homeaxis(Y_AXIS);
-        current_position[X_AXIS] += pgm_read_float(bed_ref_points_4);
-		current_position[Y_AXIS] += pgm_read_float(bed_ref_points_4+1);
-#ifdef TMC2130
-		//current_position[X_AXIS] += 0;
-		current_position[Y_AXIS] += 4;
-#endif //TMC2130
 		current_position[Z_AXIS] = current_position[Z_AXIS] + 10;
 		plan_buffer_line_curposXYZE(manual_feedrate[0] / 60, active_extruder);
 		st_synchronize();
-        set_destination_to_current();
 		_progress = lcd_selftest_screen(TestScreen::AxisZ, _progress, 3, true, 1500);
-#ifdef TMC2130
-		_result = homeaxis(Z_AXIS, false);
-#else
-        _result = lcd_selfcheck_axis(Z_AXIS, Z_MAX_POS);
-#endif //TMC2130
-
-		//raise Z to not damage the bed during and hotend testing
-		current_position[Z_AXIS] += 20;
-		plan_buffer_line_curposXYZE(manual_feedrate[0] / 60, active_extruder);
-		st_synchronize();
+		_result = lcd_selfcheck_axis(2, Z_MAX_POS);
+		if (eeprom_read_byte((uint8_t*)EEPROM_WIZARD_ACTIVE) != 1) {
+			enquecommand_P(PSTR("G28 W"));
+			enquecommand_P(PSTR("G1 Z15 F1000"));
+		}
 	}
 
 #ifdef TMC2130
@@ -7807,8 +7760,7 @@ bool lcd_selftest()
 				_progress = lcd_selftest_screen(TestScreen::FsensorOk, _progress, 3, true, 2000); //fil sensor OK
 			}
 #endif //PAT9125
-//#ifdef IR_SENSOR_ANALOG
-#if (0)
+#if IR_SENSOR_ANALOG
 			_progress = lcd_selftest_screen(TestScreen::Fsensor, _progress, 3, true, 2000); //check filament sensor
                _result = lcd_selftest_IRsensor();
 			if (_result)
@@ -7875,7 +7827,9 @@ static bool lcd_selfcheck_axis_sg(unsigned char axis) {
 	enable_endstops(true);
 
 	if (axis == X_AXIS) { //there is collision between cables and PSU cover in X axis if Z coordinate is too low
-		raise_z_above(17,true);
+
+		current_position[Z_AXIS] += 17;
+		plan_buffer_line_curposXYZE(manual_feedrate[0] / 60, active_extruder);
 		tmc2130_home_enter(Z_AXIS_MASK);
 		st_synchronize();
 		tmc2130_home_exit();
@@ -7972,7 +7926,7 @@ static bool lcd_selfcheck_axis_sg(unsigned char axis) {
 }
 #endif //TMC2130
 
-#ifndef TMC2130
+//#ifndef TMC2130
 
 static bool lcd_selfcheck_axis(int _axis, int _travel)
 {
@@ -8072,12 +8026,11 @@ static bool lcd_selfcheck_axis(int _axis, int _travel)
 			lcd_selftest_error(TestError::Motor, _error_1, _error_2);
 		}
 	}
-	current_position[_axis] = 0; //simulate axis home to avoid negative numbers for axis position, especially Z.
-	plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 
 	return _stepresult;
 }
 
+#ifndef TMC2130
 static bool lcd_selfcheck_pulleys(int axis)
 {
 	float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
@@ -8122,6 +8075,9 @@ static bool lcd_selfcheck_pulleys(int axis)
 			((READ(Y_MIN_PIN) ^ Y_MIN_ENDSTOP_INVERTING) == 1)) {
 			endstop_triggered = true;
 			if (current_position_init - 1 <= current_position[axis] && current_position_init + 1 >= current_position[axis]) {
+				current_position[axis] += (axis == X_AXIS) ? 13 : 9;
+				plan_buffer_line_curposXYZE(manual_feedrate[0] / 60, active_extruder);
+				st_synchronize();
 				return(true);
 			}
 			else {
