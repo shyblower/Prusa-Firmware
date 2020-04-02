@@ -251,7 +251,7 @@
 
 #ifdef STEPPER_X_09
   #define TMC2130_PWM_GRAD_X  4         // PWMCONF
-  #define TMC2130_PWM_AMPL_X  245       // PWMCONF
+  #define TMC2130_PWM_AMPL_X  235       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
   #define TMC2130_PWM_AMPL_X  230       // PWMCONF
@@ -261,7 +261,7 @@
 
 #ifdef STEPPER_Y_09
   #define TMC2130_PWM_GRAD_Y  4         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  245       // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  250       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
@@ -353,8 +353,8 @@
 
 //#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
 //#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_X 430       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_Y 430       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_X 400       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_Y 400       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
@@ -362,7 +362,7 @@
 
 #ifdef STEPPER_X_09 // stallguard homing settings
   #define TMC2130_SG_THRS_X       4
-  #define TMC2130_SG_THRS_X_HOME  3
+  #define TMC2130_SG_THRS_X_HOME  4
 #else
   #define TMC2130_SG_THRS_X       3    // std stallguard sensitivity for X axis
   #define TMC2130_SG_THRS_X_HOME  3    // std homing stallguard threshold for X axis
@@ -370,7 +370,7 @@
 
 #ifdef STEPPER_Y_09
   #define TMC2130_SG_THRS_Y       4
-  #define TMC2130_SG_THRS_Y_HOME  3
+  #define TMC2130_SG_THRS_Y_HOME  4
 #else
   #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
   #define TMC2130_SG_THRS_Y_HOME  3    // std homing stallguard threshold for Y axis
@@ -383,19 +383,19 @@
 
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
 #ifdef STEPPER_X_09
-  #define X_AXIS_CURRENT 17
+  #define X_AXIS_CURRENT 16
 #else
   #define X_AXIS_CURRENT 16
 #endif
 #ifdef STEPPER_Y_09
-  #define Y_AXIS_CURRENT 21
+  #define Y_AXIS_CURRENT 20
 #else
   #define Y_AXIS_CURRENT 20
 #endif
 //#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default holding currents for all axes
 //#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default running currents for all axes
-#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 30, 25}  // default holding currents for all axes
-#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 30, 25}  // default running currents for all axes
+#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 27}  // default holding currents for all axes
+#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 27}  // default running currents for all axes
 
 // running currents for homing
 #ifdef STEPPER_X_09
