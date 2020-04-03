@@ -261,7 +261,7 @@
 
 #ifdef STEPPER_Y_09
   #define TMC2130_PWM_GRAD_Y  4         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  253       // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  250       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
@@ -353,8 +353,8 @@
 
 //#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
 //#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_X 400       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_Y 380       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_X 390       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_Y 340       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
@@ -369,7 +369,7 @@
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_SG_THRS_Y       3
+  #define TMC2130_SG_THRS_Y       4
   #define TMC2130_SG_THRS_Y_HOME  4
 #else
   #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
