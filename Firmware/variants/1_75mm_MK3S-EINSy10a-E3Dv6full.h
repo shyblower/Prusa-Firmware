@@ -261,7 +261,7 @@
 
 #ifdef STEPPER_Y_09
   #define TMC2130_PWM_GRAD_Y  4         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  250       // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  253       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
@@ -354,7 +354,7 @@
 //#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
 //#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_X 400       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_Y 400       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_Y 380       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
@@ -388,7 +388,7 @@
   #define X_AXIS_CURRENT 16
 #endif
 #ifdef STEPPER_Y_09
-  #define Y_AXIS_CURRENT 20
+  #define Y_AXIS_CURRENT 21
 #else
   #define Y_AXIS_CURRENT 20
 #endif
