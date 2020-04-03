@@ -369,7 +369,7 @@
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_SG_THRS_Y       4
+  #define TMC2130_SG_THRS_Y       3
   #define TMC2130_SG_THRS_Y_HOME  4
 #else
   #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
@@ -394,8 +394,8 @@
 #endif
 //#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default holding currents for all axes
 //#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 30}  // default running currents for all axes
-#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 27}  // default holding currents for all axes
-#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 35, 27}  // default running currents for all axes
+#define TMC2130_CURRENTS_H {X_AXIS_CURRENT, Y_AXIS_CURRENT, 37, 27}  // default holding currents for all axes
+#define TMC2130_CURRENTS_R {X_AXIS_CURRENT, Y_AXIS_CURRENT, 37, 27}  // default running currents for all axes
 
 // running currents for homing
 #ifdef STEPPER_X_09
