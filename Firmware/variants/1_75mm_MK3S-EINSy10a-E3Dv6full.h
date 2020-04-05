@@ -250,7 +250,7 @@
 #define TMC2130_INTPOL_E    1         // extrapolate 256 for E axis
 
 #ifdef STEPPER_X_09
-  #define TMC2130_PWM_GRAD_X  4         // PWMCONF
+  #define TMC2130_PWM_GRAD_X  2         // PWMCONF
   #define TMC2130_PWM_AMPL_X  235       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_X  2         // PWMCONF
@@ -260,8 +260,8 @@
 #define TMC2130_PWM_FREQ_X  2         // PWMCONF
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_PWM_GRAD_Y  4         // PWMCONF
-  #define TMC2130_PWM_AMPL_Y  255       // PWMCONF
+  #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
+  #define TMC2130_PWM_AMPL_Y  240       // PWMCONF
 #else
   #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
   #define TMC2130_PWM_AMPL_Y  235       // PWMCONF
@@ -288,7 +288,7 @@
   #define TMC2130_TOFF_X 2 // adjusted for 0.9 degree motors
   #define TMC2130_HSTR_X 2
   #define TMC2130_HEND_X 0
-  #define TMC2130_TBL_X 2
+  #define TMC2130_TBL_X 1
   #define TMC2130_RES_X 0
 #else
   #define TMC2130_TOFF_X 3 // Prusa defaults X
@@ -302,7 +302,7 @@
   #define TMC2130_TOFF_Y 2 // adjusted for 0.9 degree motors
   #define TMC2130_HSTR_Y 2
   #define TMC2130_HEND_Y 0
-  #define TMC2130_TBL_Y 2
+  #define TMC2130_TBL_Y 1
   #define TMC2130_RES_Y 0
 #else
   #define TMC2130_TOFF_Y 3 // Prusa defaults Y
@@ -354,7 +354,7 @@
 //#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
 //#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_X 410       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_Y 390       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_Y 400       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
