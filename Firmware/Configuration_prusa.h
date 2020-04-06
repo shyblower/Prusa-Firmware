@@ -5,6 +5,13 @@
 #include "printers.h"
 
 /*------------------------------------
+ MODDING SETTINGS
+ *------------------------------------*/
+#define BONDTECH_EXTRUDER
+#define STEPPER_X_09
+#define STEPPER_Y_09
+
+/*------------------------------------
  GENERAL SETTINGS
  *------------------------------------*/
 
