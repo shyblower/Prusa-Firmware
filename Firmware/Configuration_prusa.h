@@ -369,15 +369,15 @@
 
 #ifdef STEPPER_X_09 // stallguard homing settings
   #define TMC2130_SG_THRS_X       3
-  #define TMC2130_SG_THRS_X_HOME  3
+  #define TMC2130_SG_THRS_X_HOME  4
 #else
   #define TMC2130_SG_THRS_X       3    // std stallguard sensitivity for X axis
   #define TMC2130_SG_THRS_X_HOME  3    // std homing stallguard threshold for X axis
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_SG_THRS_Y       3
-  #define TMC2130_SG_THRS_Y_HOME  3
+  #define TMC2130_SG_THRS_Y       2
+  #define TMC2130_SG_THRS_Y_HOME  4
 #else
   #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
   #define TMC2130_SG_THRS_Y_HOME  3    // std homing stallguard threshold for Y axis
