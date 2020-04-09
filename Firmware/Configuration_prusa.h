@@ -360,8 +360,8 @@
 
 //#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
 //#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_X 300       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_Y 300       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_X 380       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_Y 380       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
