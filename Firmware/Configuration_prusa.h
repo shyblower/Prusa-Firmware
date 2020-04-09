@@ -292,9 +292,9 @@
 //#define TMC2130_TOFF_E      5         // CHOPCONF // fchop = 17.442kHz
 
 #ifdef STEPPER_X_09
-  #define TMC2130_TOFF_X 4 // adjusted for 0.9 degree motors
-  #define TMC2130_HSTR_X 0
-  #define TMC2130_HEND_X 1
+  #define TMC2130_TOFF_X 2 // adjusted for 0.9 degree motors
+  #define TMC2130_HSTR_X 2
+  #define TMC2130_HEND_X 0
   #define TMC2130_TBL_X 1
   #define TMC2130_RES_X 0
 #else
@@ -306,9 +306,9 @@
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_TOFF_Y 4 // adjusted for 0.9 degree motors
-  #define TMC2130_HSTR_Y 0
-  #define TMC2130_HEND_Y 1
+  #define TMC2130_TOFF_Y 2 // adjusted for 0.9 degree motors
+  #define TMC2130_HSTR_Y 2
+  #define TMC2130_HEND_Y 0
   #define TMC2130_TBL_Y 1
   #define TMC2130_RES_Y 0
 #else
@@ -360,24 +360,24 @@
 
 //#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
 //#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_X 380       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_Y 380       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_X 400       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_Y 390       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
 #define TMC2130_SG_HOMING       1     // stallguard homing
 
 #ifdef STEPPER_X_09 // stallguard homing settings
-  #define TMC2130_SG_THRS_X       3
-  #define TMC2130_SG_THRS_X_HOME  3
+  #define TMC2130_SG_THRS_X       4
+  #define TMC2130_SG_THRS_X_HOME  4
 #else
   #define TMC2130_SG_THRS_X       3    // std stallguard sensitivity for X axis
   #define TMC2130_SG_THRS_X_HOME  3    // std homing stallguard threshold for X axis
 #endif
 
 #ifdef STEPPER_Y_09
-  #define TMC2130_SG_THRS_Y       3
-  #define TMC2130_SG_THRS_Y_HOME  3
+  #define TMC2130_SG_THRS_Y       4
+  #define TMC2130_SG_THRS_Y_HOME  4
 #else
   #define TMC2130_SG_THRS_Y       3    // std stallguard sensitivity for Y axis
   #define TMC2130_SG_THRS_Y_HOME  3    // std homing stallguard threshold for Y axis
@@ -390,7 +390,7 @@
 
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
 #ifdef STEPPER_X_09
-  #define X_AXIS_CURRENT 18
+  #define X_AXIS_CURRENT 16
 #else
   #define X_AXIS_CURRENT 16
 #endif
