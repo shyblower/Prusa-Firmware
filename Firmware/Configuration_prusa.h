@@ -80,7 +80,7 @@
 #define Y_MAX_POS 212.5
 #define Y_MIN_POS -4 //orig -4
 #ifdef BONDTECH_EXTRUDER
-  #define Z_MAX_POS 205
+  #define Z_MAX_POS 210
 #else
   #define Z_MAX_POS 210
 #endif
