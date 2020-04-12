@@ -360,7 +360,7 @@
 
 //#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
 //#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_X 370       // TCOOLTHRS - coolstep treshold
+#define TMC2130_TCOOLTHRS_X 360       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Y 320       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
@@ -368,7 +368,7 @@
 #define TMC2130_SG_HOMING       1     // stallguard homing
 
 #ifdef STEPPER_X_09 // stallguard homing settings
-  #define TMC2130_SG_THRS_X       5
+  #define TMC2130_SG_THRS_X       4
   #define TMC2130_SG_THRS_X_HOME  4
 #else
   #define TMC2130_SG_THRS_X       3    // std stallguard sensitivity for X axis
@@ -390,7 +390,7 @@
 
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
 #ifdef STEPPER_X_09
-  #define X_AXIS_CURRENT 17
+  #define X_AXIS_CURRENT 18
 #else
   #define X_AXIS_CURRENT 16
 #endif
