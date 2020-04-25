@@ -53,7 +53,7 @@ void lcd_load_filament_color_check();
 extern void lcd_belttest();
 extern bool lcd_selftest();
 
-void lcd_menu_statistics(); 
+void lcd_menu_statistics();
 
 void lcd_menu_extruder_info();                    // NOT static due to using inside "Marlin_main" module ("manage_inactivity()")
 void lcd_menu_show_sensors_state();               // NOT static due to using inside "Marlin_main" module ("manage_inactivity()")
@@ -138,6 +138,11 @@ extern uint8_t farm_status;
 #define SILENT_MODE_OFF SILENT_MODE_POWER
 #endif
 
+#ifdef IR_SENSOR_ANALOG
+extern bool bMenuFSDetect;
+void printf_IRSensorAnalogBoardChange(bool bPCBrev04);
+#endif //IR_SENSOR_ANALOG
+
 extern int8_t SilentModeMenu;
 extern uint8_t SilentModeMenu_MMU;
 
@@ -156,7 +161,7 @@ void lcd_hw_setup_menu(void);                     // NOT static due to using ins
 void change_extr(int extr);
 
 #ifdef SNMM
-void extr_unload_all(); 
+void extr_unload_all();
 void extr_unload_used();
 #endif //SNMM
 void extr_unload();

@@ -97,15 +97,15 @@ void print_mem(uint32_t address, uint16_t count, uint8_t type, uint8_t countperl
 	}
 }
 
-#ifdef DEBUG_DCODE3
+#if defined DEBUG_DCODE3 || defined DEBUG_DCODES
 #define EEPROM_SIZE 0x1000
     /*!
     *
     ### D3 - Read/Write EEPROM <a href="https://reprap.org/wiki/G-code#D3:_Read.2FWrite_EEPROM">D3: Read/Write EEPROM</a>
     This command can be used without any additional parameters. It will read the entire eeprom.
-      
+
           D3 [ A | C | X ]
-      
+
       - `A` - Address (0x0000-0x0fff)
       - `C` - Count (0x0001-0x1000)
       - `X` - Data
@@ -191,9 +191,9 @@ extern float axis_steps_per_unit[NUM_AXIS];
     /*!
     *
     ### D-1 - Endless Loop <a href="https://reprap.org/wiki/G-code#G28:_Move_to_Origin_.28Home.29">D-1: Endless Loop</a>
-      
+
           D-1
-      
+
     *
     */
 void dcode__1()
@@ -208,9 +208,9 @@ void dcode__1()
     /*!
     *
     ### D0 - Reset <a href="https://reprap.org/wiki/G-code#D0:_Reset">D0: Reset</a>
-      
+
           D0 [ B ]
-      
+
       - `B` - Bootloader
     *
     */
@@ -235,9 +235,9 @@ void dcode_0()
     /*!
     *
     ### D1 - Clear EEPROM and RESET <a href="https://reprap.org/wiki/G-code#D1:_Clear_EEPROM_and_RESET">D1: Clear EEPROM and RESET</a>
-      
+
           D1
-      
+
     *
     */
 void dcode_1()
@@ -254,9 +254,9 @@ void dcode_1()
     *
     ### D2 - Read/Write RAM <a href="https://reprap.org/wiki/G-code#D2:_Read.2FWrite_RAM">D2: Read/Write RAM</a>
     This command can be used without any additional parameters. It will read the entire RAM.
-      
+
           D2 [ A | C | X ]
-      
+
       - `A` - Address (0x0000-0x1fff)
       - `C` - Count (0x0001-0x2000)
       - `X` - Data
@@ -308,11 +308,11 @@ void dcode_2()
     /*!
     *
     ### D4 - Read/Write PIN <a href="https://reprap.org/wiki/G-code#D4:_Read.2FWrite_PIN">D4: Read/Write PIN</a>
-    
+
     To read the digital value of a pin you need only to define the pin number.
-      
+
           D4 [ P | F | V ]
-      
+
       - `P` - Pin (0-255)
       - `F` - Function in/out (0/1)
       - `V` - Value (0/1)
@@ -348,21 +348,28 @@ void dcode_4()
 }
 #endif //DEBUG_DCODES
 
-#ifdef DEBUG_DCODE5
+#if defined DEBUG_DCODE5 || defined DEBUG_DCODES
 
     /*!
     *
     ### D5 - Read/Write FLASH <a href="https://reprap.org/wiki/G-code#D5:_Read.2FWrite_FLASH">D5: Read/Write Flash</a>
     This command can be used without any additional parameters. It will read the 1kb FLASH.
-      
-          D5 [ A | C | X | E ]
-      
-      - `A` - Address (0x00000-0x3ffff)
-      - `C` - Count (0x0001-0x2000)
-      - `X` - Data
-      - `E` - Erase
-    *
-    */
+    #### Usage
+
+        D5 [ A | C | X | E ]
+
+    #### Parameters
+    - `A` - Address (x00000-x3ffff)
+    - `C` - Count (1-8192)
+    - `X` - Data (hex)
+    - `E` - Erase
+
+	#### Notes
+	- The hex address needs to be lowercase without the 0 before the x
+	- Count is decimal
+	- The hex data needs to be lowercase
+
+   */
 void dcode_5()
 {
 	printf_P(PSTR("D5 - Read/Write FLASH\n"));
@@ -429,7 +436,7 @@ void dcode_5()
     /*!
     *
     ### D6 - Read/Write external FLASH <a href="https://reprap.org/wiki/G-code#D6:_Read.2FWrite_external_FLASH">D6: Read/Write external Flash</a>
-    
+
     Reserved
    *
    */
@@ -441,7 +448,7 @@ void dcode_6()
     /*!
     *
     ### D7 - Read/Write Bootloader <a href="https://reprap.org/wiki/G-code#D7:_Read.2FWrite_Bootloader">D7: Read/Write Bootloader</a>
-    
+
     Reserved
    *
    */
@@ -463,9 +470,9 @@ void dcode_7()
     /*!
     *
     ### D8 - Read/Write PINDA <a href="https://reprap.org/wiki/G-code#D8:_Read.2FWrite_PINDA">D8: Read/Write PINDA</a>
-      
+
           D8 [ ? | ! | P | Z ]
-      
+
       - `?` - Read PINDA temperature shift values
       - `!` - Reset PINDA temperature shift values to default
       - `P` - Pinda temperature [C]
@@ -516,10 +523,10 @@ void dcode_8()
     /*!
     *
     ### D9 - Read ADC <a href="https://reprap.org/wiki/G-code#D9:_Read.2FWrite_ADC">D9: Read ADC</a>
-      
+
           D9 [ I | V ]
-      
-      - `I` - ADC channel index 
+
+      - `I` - ADC channel index
          - `0` - Heater 0 temperature
          - `1` - Heater 1 temperature
          - `2` - Bed temperature
@@ -606,19 +613,19 @@ void dcode_9()
     /*!
     *
     ### D10 - Set XYZ calibration = OK <a href="https://reprap.org/wiki/G-code#D10:_Set_XYZ_calibration_.3D_OK">D10: Set XYZ calibration = OK</a>
-    
+
    *
    */
 void dcode_10()
 {//Tell the printer that XYZ calibration went OK
 	LOG("D10 - XYZ calibration = OK\n");
-	calibration_status_store(CALIBRATION_STATUS_LIVE_ADJUST); 
+	calibration_status_store(CALIBRATION_STATUS_LIVE_ADJUST);
 }
 
     /*!
     *
     ### D12 - Time <a href="https://reprap.org/wiki/G-code#D12:_Time">D12: Time</a>
-    
+
    *
    */
 void dcode_12()
@@ -627,6 +634,98 @@ void dcode_12()
 
 }
 
+#ifdef HEATBED_ANALYSIS
+    /*!
+    ### D80 - Bed check <a href="https://reprap.org/wiki/G-code#D80:_Bed_check">D80: Bed check</a>
+    This command will log data to SD card file "mesh.txt".
+    #### Usage
+
+        D80 [ E | F | G | H | I | J ]
+
+    #### Parameters
+    - `E` - Dimension X (default 40)
+    - `F` - Dimention Y (default 40)
+    - `G` - Points X (default 40)
+    - `H` - Points Y (default 40)
+    - `I` - Offset X (default 74)
+    - `J` - Offset Y (default 34)
+  */
+void dcode_80()
+{
+	float dimension_x = 40;
+	float dimension_y = 40;
+	int points_x = 40;
+	int points_y = 40;
+	float offset_x = 74;
+	float offset_y = 33;
+
+	if (code_seen('E')) dimension_x = code_value();
+	if (code_seen('F')) dimension_y = code_value();
+	if (code_seen('G')) {points_x = code_value(); }
+	if (code_seen('H')) {points_y = code_value(); }
+	if (code_seen('I')) {offset_x = code_value(); }
+	if (code_seen('J')) {offset_y = code_value(); }
+	printf_P(PSTR("DIM X: %f\n"), dimension_x);
+	printf_P(PSTR("DIM Y: %f\n"), dimension_y);
+	printf_P(PSTR("POINTS X: %d\n"), points_x);
+	printf_P(PSTR("POINTS Y: %d\n"), points_y);
+	printf_P(PSTR("OFFSET X: %f\n"), offset_x);
+	printf_P(PSTR("OFFSET Y: %f\n"), offset_y);
+		bed_check(dimension_x,dimension_y,points_x,points_y,offset_x,offset_y);
+}
+
+
+    /*!
+    ### D81 - Bed analysis <a href="https://reprap.org/wiki/G-code#D81:_Bed_analysis">D80: Bed analysis</a>
+    This command will log data to SD card file "wldsd.txt".
+    #### Usage
+
+        D81 [ E | F | G | H | I | J ]
+
+    #### Parameters
+    - `E` - Dimension X (default 40)
+    - `F` - Dimention Y (default 40)
+    - `G` - Points X (default 40)
+    - `H` - Points Y (default 40)
+    - `I` - Offset X (default 74)
+    - `J` - Offset Y (default 34)
+  */
+void dcode_81()
+{
+	float dimension_x = 40;
+	float dimension_y = 40;
+	int points_x = 40;
+	int points_y = 40;
+	float offset_x = 74;
+	float offset_y = 33;
+
+	if (code_seen('E')) dimension_x = code_value();
+	if (code_seen('F')) dimension_y = code_value();
+	if (code_seen("G")) { strchr_pointer+=1; points_x = code_value(); }
+	if (code_seen("H")) { strchr_pointer+=1; points_y = code_value(); }
+	if (code_seen("I")) { strchr_pointer+=1; offset_x = code_value(); }
+	if (code_seen("J")) { strchr_pointer+=1; offset_y = code_value(); }
+
+	bed_analysis(dimension_x,dimension_y,points_x,points_y,offset_x,offset_y);
+
+}
+
+#endif //HEATBED_ANALYSIS
+
+    /*!
+    ### D106 - Print measured fan speed for different pwm values <a href="https://reprap.org/wiki/G-code#D106:_Print_measured_fan_speed_for_different_pwm_values">D106: Print measured fan speed for different pwm values</a>
+    */
+void dcode_106()
+{
+	for (int i = 255; i > 0; i = i - 5) {
+		fanSpeed = i;
+		//delay_keep_alive(2000);
+		for (int j = 0; j < 100; j++) {
+			delay_keep_alive(100);
+			}
+			printf_P(_N("%d: %d\n"), i, fan_speed[1]);
+	}
+}
 
 #ifdef TMC2130
 #include "planner.h"
@@ -769,9 +868,9 @@ void dcode_2130()
     /*!
     *
     ### D9125 - PAT9125 filament sensor <a href="https://reprap.org/wiki/G-code#D9:_Read.2FWrite_ADC">D9125: PAT9125 filament sensor</a>
-      
+
           D9125 [ ? | ! | R | X | Y | L ]
-      
+
       - `?` - Print values
       - `!` - Print values
       - `R` - Resolution. Not active in code
