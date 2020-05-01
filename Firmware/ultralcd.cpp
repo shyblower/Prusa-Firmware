@@ -6421,8 +6421,13 @@ void unload_filament()
 	plan_buffer_line_curposXYZE(5200 / 60);
 	st_synchronize();
 	current_position[E_AXIS] -= 15;
-	plan_buffer_line_curposXYZE(1000 / 60);
-	st_synchronize();
+
+	// if the filament sensor is enabled, unload as long as filament is detected (max 10 times)
+	for (int i = 0; ((!ir_sensor_detected || !fsensor_enabled) && (i < 1)) || ((i < 10) && (digitalRead(IR_SENSOR_PIN) == 0)); ++i) {
+		current_position[E_AXIS] -= 20;
+		plan_buffer_line_curposXYZE(1000 / 60);
+		st_synchronize();
+	}
 
 	// if the filament sensor is enabled, unload as long as filament is detected (max 10 times)
 	for (int i = 0; ((!ir_sensor_detected || !fsensor_enabled) && (i < 1)) || ((i < 10) && (digitalRead(IR_SENSOR_PIN) == 0)); ++i) {
