@@ -72,7 +72,7 @@ static void EEPROM_readData(uint8_t* pos, uint8_t* value, uint8_t size, const ch
 void Config_StoreSettings()
 {
   strcpy(cs.version,"000"); //!< invalidate data first @TODO use erase to save one erase cycle
-  
+
   if (EEPROM_writeData(reinterpret_cast<uint8_t*>(EEPROM_M500_base),reinterpret_cast<uint8_t*>(&cs),sizeof(cs),0), "cs, invalid version")
   {
       strcpy(cs.version,EEPROM_VERSION); //!< validate data if write succeed
@@ -228,7 +228,7 @@ static const M500_conf default_conf PROGMEM =
     DEFAULT_MAX_FEEDRATE_SILENT,
     DEFAULT_MAX_ACCELERATION_SILENT,
 #ifdef TMC2130
-    { TMC2130_USTEPS_XY, TMC2130_USTEPS_XY, TMC2130_USTEPS_Z, TMC2130_USTEPS_E },
+    { TMC2130_USTEPS_X, TMC2130_USTEPS_Y, TMC2130_USTEPS_Z, TMC2130_USTEPS_E },
 #else // TMC2130
     {16,16,16,16},
 #endif
@@ -248,7 +248,7 @@ bool Config_RetrieveSettings()
 
         EEPROM_readData(reinterpret_cast<uint8_t*>(EEPROM_M500_base), reinterpret_cast<uint8_t*>(&cs), sizeof(cs), "cs");
 
-        
+
 		if (cs.max_jerk[X_AXIS] > DEFAULT_XJERK) cs.max_jerk[X_AXIS] = DEFAULT_XJERK;
 		if (cs.max_jerk[Y_AXIS] > DEFAULT_YJERK) cs.max_jerk[Y_AXIS] = DEFAULT_YJERK;
         calculate_extruder_multipliers();
@@ -281,9 +281,9 @@ bool Config_RetrieveSettings()
 			if (cs.max_acceleration_units_per_sq_second_silent[j] > SILENT_MAX_ACCEL_XY)
 				cs.max_acceleration_units_per_sq_second_silent[j] = SILENT_MAX_ACCEL_XY;
 		}
-        
-		if(cs.axis_ustep_resolution[X_AXIS] == 0xff){ cs.axis_ustep_resolution[X_AXIS] = TMC2130_USTEPS_XY; }
-		if(cs.axis_ustep_resolution[Y_AXIS] == 0xff){ cs.axis_ustep_resolution[Y_AXIS] = TMC2130_USTEPS_XY; }
+
+		if(cs.axis_ustep_resolution[X_AXIS] == 0xff){ cs.axis_ustep_resolution[X_AXIS] = TMC2130_USTEPS_X; }
+		if(cs.axis_ustep_resolution[Y_AXIS] == 0xff){ cs.axis_ustep_resolution[Y_AXIS] = TMC2130_USTEPS_Y; }
 		if(cs.axis_ustep_resolution[Z_AXIS] == 0xff){ cs.axis_ustep_resolution[Z_AXIS] = TMC2130_USTEPS_Z; }
 		if(cs.axis_ustep_resolution[E_AXIS] == 0xff){ cs.axis_ustep_resolution[E_AXIS] = TMC2130_USTEPS_E; }
 
@@ -325,7 +325,7 @@ void Config_ResetDefault()
 
 	// steps per sq second need to be updated to agree with the units per sq second
     reset_acceleration_rates();
-    
+
 #ifdef PIDTEMP
     updatePID();
 #ifdef PID_ADD_EXTRUSION_RATE
