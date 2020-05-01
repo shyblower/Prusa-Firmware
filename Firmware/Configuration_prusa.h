@@ -388,6 +388,8 @@
 #define TMC2130_SG_THRS_E       3     // stallguard sensitivity for E axis
 #define TMC2130_SG_THRS_E_HOME  3     // stallguard sensitivity for E axis
 
+#define TMC2130_SG_THRS_HOME {TMC2130_SG_THRS_X_HOME, TMC2130_SG_THRS_Y_HOME, TMC2130_SG_THRS_Z_HOME, TMC2130_SG_THRS_E_HOME}
+
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
 #ifdef STEPPER_X_09
   #define X_AXIS_CURRENT 18
