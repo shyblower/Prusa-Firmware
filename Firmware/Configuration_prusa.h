@@ -51,7 +51,7 @@
 
 // Steps per unit {X,Y,Z,E}
 #ifdef BONDTECH_EXTRUDER
-  #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,414}
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,415}
 #else
   #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,280}
 #endif
@@ -251,7 +251,11 @@
 #endif
 
 #define TMC2130_USTEPS_Z    16        // microstep resolution for Z axis
-#define TMC2130_USTEPS_E    32        // microstep resolution for E axis
+#ifdef BONDTECH_EXTRUDER
+  #define TMC2130_USTEPS_E    16      // microstep resolution for E axis
+#else
+  #define TMC2130_USTEPS_E    32      // microstep resolution for E axis
+#endif
 #define TMC2130_INTPOL_XY   1         // extrapolate 256 for XY axes
 #define TMC2130_INTPOL_Z    1         // extrapolate 256 for Z axis
 #define TMC2130_INTPOL_E    1         // extrapolate 256 for E axis
