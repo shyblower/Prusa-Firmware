@@ -362,10 +362,19 @@
 #define TMC2130_TPWMTHRS  0         // TPWMTHRS - Sets the switching speed threshold based on TSTEP from stealthChop to spreadCycle mode
 #define TMC2130_THIGH     0         // THIGH - unused
 
-//#define TMC2130_TCOOLTHRS_X 450       // TCOOLTHRS - coolstep treshold
-//#define TMC2130_TCOOLTHRS_Y 450       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_X 280       // TCOOLTHRS - coolstep treshold
-#define TMC2130_TCOOLTHRS_Y 260       // TCOOLTHRS - coolstep treshold
+
+#ifdef STEPPER_X_09
+  #define TMC2130_TCOOLTHRS_X 280       // TCOOLTHRS - coolstep treshold
+#else
+  #define TMC2130_TCOOLTHRS_X 430       // TCOOLTHRS - coolstep treshold
+#endif
+
+#ifdef STEPPER_Y_09
+  #define TMC2130_TCOOLTHRS_Y 260       // TCOOLTHRS - coolstep treshold
+#else
+  #define TMC2130_TCOOLTHRS_Y 430       // TCOOLTHRS - coolstep treshold
+#endif
+
 #define TMC2130_TCOOLTHRS_Z 500       // TCOOLTHRS - coolstep treshold
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
